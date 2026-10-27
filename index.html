@@ -1,0 +1,2066 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HEP — Kolej Komuniti Mas Gading</title>
+<style>
+/* ── Reset & base ─────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef2f7;color:#172c41;font:15px/1.6 'Segoe UI',system-ui,sans-serif;display:flex;min-height:100vh}
+
+/* ── Page views ───────────────────────────────── */
+.view{display:none}.view.active{display:block}
+
+/* ── Sidebar ──────────────────────────────────── */
+aside{
+  position:fixed;inset:0 auto 0 0;width:260px;
+  background:#0d2b42;color:#fff;
+  display:flex;flex-direction:column;
+  padding:0;overflow:hidden;z-index:100;
+}
+.sidebar-brand{padding:28px 22px 18px;border-bottom:1px solid #1e4060}
+.sidebar-brand strong{font-size:21px;display:block}
+.sidebar-brand small{color:#7eb8d4;font-size:12px;display:block;margin-top:4px}
+.sidebar-nav{padding:14px 12px;flex:1;overflow-y:auto}
+.sidebar-nav button{
+  display:block;width:100%;text-align:left;
+  padding:11px 14px;border:0;background:transparent;
+  color:#a8c4d6;margin-bottom:3px;border-radius:8px;
+  font:inherit;cursor:pointer;transition:background .15s
+}
+.sidebar-nav button.active{background:#1a4d6d;color:#fff}
+.sidebar-nav button:hover:not(:disabled){background:#163d58}
+.sidebar-nav button:disabled{opacity:.45;cursor:default}
+.sidebar-nav .nav-label{font-size:13px;font-weight:600;display:block}
+.sidebar-nav .nav-badge{
+  font-size:10px;font-weight:700;letter-spacing:.6px;
+  display:inline-block;margin-top:2px;color:#5a9abf
+}
+.sidebar-nav button.active .nav-badge{color:#7ec8e3}
+.sidebar-nav button:disabled .nav-badge{color:#3a5f78}
+.sidebar-footer{padding:14px 18px;border-top:1px solid #1e4060;font-size:11px;color:#4a7a99}
+
+/* ── Main content ─────────────────────────────── */
+main{margin-left:260px;flex:1;padding:0}
+.page-header{
+  background:#fff;border-bottom:1px solid #d4dde7;
+  padding:24px 40px 20px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px
+}
+.page-header-text .badge{
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  color:#147b6c;background:#e2f5f1;padding:3px 10px;border-radius:4px
+}
+.page-header-text h1{font-size:26px;margin:8px 0 4px}
+.page-header-text p{color:#607286;font-size:14px}
+.page-body{padding:28px 40px 120px}
+
+/* ── Notice bar ───────────────────────────────── */
+.notice{
+  background:#e8f4f2;border-left:4px solid #159880;
+  border-radius:6px;padding:13px 18px;margin-bottom:24px;
+  font-size:14px;color:#135f55
+}
+
+/* ── Card ─────────────────────────────────────── */
+.card{
+  background:#fff;border:1px solid #dce5ed;
+  border-radius:12px;margin-bottom:22px;overflow:hidden
+}
+.card-head{
+  padding:16px 24px;border-bottom:1px solid #edf1f6;
+  display:flex;align-items:center;gap:12px
+}
+.card-num{
+  width:34px;height:34px;border-radius:8px;
+  background:#1a4d6d;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;flex-shrink:0
+}
+.card-head h2{font-size:16px;font-weight:700;margin:0}
+.card-body{padding:22px 24px}
+
+/* ── Grid ─────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.full{grid-column:1/-1}
+
+/* ── Form controls ────────────────────────────── */
+.field label{
+  display:block;font-size:12px;font-weight:700;
+  letter-spacing:.3px;color:#425e72;margin-bottom:6px
+}
+.field label .req{color:#c0392b}
+input[type=text],input[type=date],input[type=number],
+input[type=tel],input[type=email],textarea,select{
+  width:100%;border:1px solid #c8d5e0;border-radius:7px;
+  padding:10px 12px;font:inherit;color:#172c41;
+  background:#fff;transition:border-color .15s,box-shadow .15s
+}
+input:focus,textarea:focus{
+  outline:none;border-color:#159880;
+  box-shadow:0 0 0 3px rgba(21,152,128,.12)
+}
+textarea{min-height:90px;resize:vertical}
+.hint{font-size:12px;color:#6a7d8d;margin-top:4px}
+
+/* ── Dynamic table widget ─────────────────────── */
+.dyn-table-wrap{overflow-x:auto}
+.dyn-table{width:100%;border-collapse:collapse;font-size:14px;min-width:420px}
+.dyn-table th{
+  background:#edf3f8;text-align:left;
+  padding:9px 10px;font-size:12px;font-weight:700;
+  border:1px solid #d0dce8;color:#2c4a62
+}
+.dyn-table td{
+  border:1px solid #dce5ed;padding:5px;
+  vertical-align:top
+}
+.dyn-table td input{
+  border:0;background:transparent;padding:5px 6px;
+  font:inherit;width:100%;color:#172c41
+}
+.dyn-table td input:focus{
+  outline:none;background:#f0f7ff;border-radius:4px
+}
+.dyn-table .col-action{width:44px;text-align:center}
+.btn-del{
+  background:none;border:1px solid #e8c8c8;color:#b94444;
+  border-radius:5px;width:28px;height:28px;cursor:pointer;
+  font-size:16px;line-height:1;display:inline-flex;
+  align-items:center;justify-content:center
+}
+.btn-del:hover{background:#fdeaea}
+.btn-add{
+  margin-top:8px;border:1px dashed #7fb5cc;
+  background:#f4fafd;color:#1a6080;
+  padding:7px 16px;border-radius:6px;
+  font:600 13px inherit;cursor:pointer;display:inline-flex;
+  align-items:center;gap:6px
+}
+.btn-add:hover{background:#e8f4fb}
+
+/* ── Budget total ─────────────────────────────── */
+.budget-total{
+  text-align:right;padding:10px 8px 0;
+  font-size:16px;font-weight:700;color:#147b6c
+}
+.budget-error{color:#c0392b;font-size:13px;font-weight:400}
+
+/* ── Sticky footer ────────────────────────────── */
+.sticky-footer{
+  position:fixed;bottom:0;left:260px;right:0;
+  background:rgba(238,242,247,.97);backdrop-filter:blur(6px);
+  border-top:1px solid #d4dde7;
+  padding:14px 40px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  z-index:50
+}
+.status-msg{font-size:13px;color:#2a6e62}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ── Buttons ──────────────────────────────────── */
+.btn{
+  border:1px solid #b8c9d8;background:#fff;color:#193d59;
+  padding:10px 18px;border-radius:8px;
+  font:600 14px inherit;cursor:pointer;
+  transition:background .12s,border-color .12s
+}
+.btn:hover{background:#f0f6fa;border-color:#8aafcc}
+.btn-primary{
+  background:#147b6c;color:#fff;border-color:#147b6c;padding:10px 24px
+}
+.btn-primary:hover{background:#0f5f54}
+
+/* ── Module dashboard panel ───────────────────── */
+.mod-dash{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:14px;margin-bottom:22px
+}
+.mod-dash-card{
+  background:#fff;border:1px solid #dce5ed;border-radius:10px;
+  padding:16px 18px;display:flex;align-items:flex-start;gap:12px
+}
+.mod-dash-icon{font-size:26px;line-height:1;flex-shrink:0;margin-top:2px}
+.mod-dash-info{}
+.mod-dash-title{font-size:11px;font-weight:700;letter-spacing:.4px;
+  color:#607286;text-transform:uppercase;margin-bottom:4px}
+.mod-dash-val{font-size:18px;font-weight:700;color:#1a4d6d;line-height:1.2}
+.mod-dash-sub{font-size:11px;color:#7a8fa0;margin-top:2px}
+.mod-dash-tip{
+  background:#f4f8fc;border:1px solid #d4e4f0;border-radius:8px;
+  padding:11px 16px;margin-bottom:22px;font-size:13px;color:#2c4a62;
+  display:flex;gap:10px;align-items:flex-start
+}
+.mod-dash-tip b{display:block;margin-bottom:3px;font-size:12px;color:#1a4d6d;text-transform:uppercase;letter-spacing:.4px}
+
+/* ── Dashboard ────────────────────────────────── */
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px}
+.stat-card{background:#fff;border:1px solid #dce5ed;border-radius:12px;padding:22px 24px}
+.stat-card .stat-val{font-size:34px;font-weight:700;color:#1a4d6d;line-height:1.1}
+.stat-card .stat-lbl{font-size:13px;color:#607286;margin-top:4px}
+.stat-card .stat-icon{font-size:28px;margin-bottom:10px}
+.draft-list{background:#fff;border:1px solid #dce5ed;border-radius:12px;overflow:hidden;margin-bottom:24px}
+.draft-list-head{padding:14px 20px;border-bottom:1px solid #edf1f6;display:flex;justify-content:space-between;align-items:center}
+.draft-list-head h3{font-size:15px;font-weight:700;margin:0}
+.draft-item{padding:13px 20px;border-bottom:1px solid #f0f4f8;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.draft-item:last-child{border-bottom:0}
+.draft-item:hover{background:#f8fafb}
+.draft-item-info{flex:1;min-width:0}
+.draft-item-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.draft-item-meta{font-size:12px;color:#7a8fa0;margin-top:2px}
+.draft-item-acts{display:flex;gap:8px;flex-shrink:0}
+.btn-xs{padding:5px 11px;border-radius:6px;font:600 12px inherit;cursor:pointer;border:1px solid #c5d5e0;background:#fff;color:#2c4a62}
+.btn-xs:hover{background:#eef4f8}
+.btn-xs.danger{border-color:#e8c0c0;color:#b94444}
+.btn-xs.danger:hover{background:#fdeaea}
+.empty-state{padding:40px 20px;text-align:center;color:#7a8fa0;font-size:14px}
+.dash-guide{background:#fff;border:1px solid #dce5ed;border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.dash-guide h3{font-size:15px;font-weight:700;margin-bottom:14px}
+.guide-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.guide-step{background:#f4f8fc;border-radius:8px;padding:14px 16px}
+.guide-step .step-num{width:26px;height:26px;border-radius:50%;background:#1a4d6d;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.guide-step .step-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.guide-step .step-desc{font-size:12px;color:#607286;line-height:1.5}
+
+/* ── Chatbot ──────────────────────────────────── */
+#chat-fab{
+  position:fixed;bottom:90px;right:24px;
+  width:52px;height:52px;border-radius:50%;
+  background:#1a4d6d;color:#fff;border:0;
+  font-size:22px;cursor:pointer;z-index:200;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,background .15s
+}
+#chat-fab:hover{background:#0d2b42;transform:scale(1.08)}
+#chat-fab .chat-badge{
+  position:absolute;top:-2px;right:-2px;
+  width:16px;height:16px;border-radius:50%;
+  background:#e05353;font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid #fff
+}
+#chat-panel{
+  position:fixed;bottom:155px;right:24px;
+  width:340px;max-height:520px;
+  background:#fff;border:1px solid #d4dde7;
+  border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  display:flex;flex-direction:column;z-index:200;
+  transition:opacity .2s,transform .2s;
+  opacity:0;transform:translateY(16px) scale(.97);pointer-events:none
+}
+#chat-panel.open{opacity:1;transform:none;pointer-events:auto}
+.chat-head{
+  background:#1a4d6d;color:#fff;
+  border-radius:14px 14px 0 0;
+  padding:13px 16px;
+  display:flex;justify-content:space-between;align-items:center
+}
+.chat-head strong{font-size:14px}
+.chat-head small{font-size:11px;color:#99c0d8;display:block}
+#chat-close{background:none;border:0;color:#fff;font-size:20px;cursor:pointer;line-height:1;padding:0 2px}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.msg{max-width:85%;padding:9px 13px;border-radius:10px;font-size:13px;line-height:1.5}
+.msg.bot{background:#f0f6fa;color:#172c41;border-bottom-left-radius:3px;align-self:flex-start}
+.msg.user{background:#1a4d6d;color:#fff;border-bottom-right-radius:3px;align-self:flex-end}
+.msg.bot strong{display:block;margin-bottom:4px;color:#0d2b42;font-size:12px}
+.chat-chips{padding:6px 14px 10px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  padding:5px 12px;border-radius:20px;
+  border:1px solid #c5d8e8;background:#f4f8fc;
+  color:#1a4d6d;font:600 12px inherit;cursor:pointer;
+  transition:background .12s
+}
+.chip:hover{background:#ddeef8}
+.chat-input-row{padding:10px 12px;border-top:1px solid #edf1f6;display:flex;gap:8px}
+#chat-input{
+  flex:1;border:1px solid #c8d5e0;border-radius:20px;
+  padding:8px 14px;font:13px inherit;outline:none
+}
+#chat-input:focus{border-color:#1a4d6d}
+#chat-send{
+  background:#1a4d6d;color:#fff;border:0;
+  border-radius:50%;width:34px;height:34px;
+  font-size:16px;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center
+}
+#chat-send:hover{background:#0d2b42}
+
+/* ── Responsive ───────────────────────────────── */
+@media(max-width:860px){
+  aside{position:static;width:100%;height:auto}
+  main{margin-left:0}
+  .page-header,.page-body{padding:18px}
+  .sticky-footer{left:0;padding:12px 18px}
+  .grid{grid-template-columns:1fr}
+  .dash-grid,.guide-steps{grid-template-columns:1fr}
+  #chat-panel{width:calc(100vw - 32px);right:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════  SIDEBAR  ════════════════════════════ -->
+<aside>
+  <div class="sidebar-brand">
+    <!-- Logo KKMG sebenar -->
+    <img src="data:image/png;base64,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" alt="Logo KKMG" style="width:160px;height:auto;display:block;margin-bottom:8px">
+    <small style="color:#7eb8d4;font-size:11px">Unit Hal Ehwal Pelajar</small>
+  </div>
+  <nav class="sidebar-nav">
+    <button id="nav-dash">
+      <span class="nav-label">Dashboard</span>
+    </button>
+    <button class="active" id="nav-kk">
+      <span class="nav-label">Kertas Kerja</span>
+    </button>
+    <button id="nav-memo">
+      <span class="nav-label">Memo</span>
+    </button>
+    <button id="nav-ajk">
+      <span class="nav-label">Surat Lantikan AJK</span>
+    </button>
+    <button id="nav-penceramah">
+      <span class="nav-label">Surat Lantikan Penceramah</span>
+    </button>
+    <button id="nav-sijil">
+      <span class="nav-label">Penjanaan Sijil</span>
+    </button>
+    <button id="nav-laporan">
+      <span class="nav-label">Laporan Program</span>
+    </button>
+    <button id="nav-penilaian">
+      <span class="nav-label">Penilaian Kursus</span>
+    </button>
+    <button id="nav-analisis">
+      <span class="nav-label">Analisis Keberkesanan</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer">Siti Nursaadah (KKMG)</div>
+</aside>
+
+<!-- ═══════════════════════════  MAIN  ══════════════════════════════ -->
+<main>
+
+<!-- ─────────────────────── VIEW: DASHBOARD ─────────────────────── -->
+<div class="view" id="view-dash">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PAPAN PEMUKA</div>
+      <h1>Dashboard</h1>
+      <p>Gambaran keseluruhan sistem pengurusan dokumen HEP Kolej Komuniti Mas Gading.</p>
+    </div>
+    <button class="btn btn-primary" id="btn-new-kk">+ Kertas Kerja Baharu</button>
+  </div>
+  <div class="page-body">
+
+    <!-- Carta UAB HEP — bilangan keseluruhan setiap jenis -->
+    <div class="draft-list" style="padding:18px;margin-bottom:24px">
+      <h3 style="margin:0 0 12px;font-size:14px;color:#1a4d6d">UAB HEP — Bilangan Keseluruhan Dokumen Dijana Mengikut Jenis</h3>
+      <div id="chart-dash-jenis"><p style="color:#9ba8b5;font-size:13px">Tiada rekod lagi. Jana mana-mana dokumen untuk melihat carta.</p></div>
+    </div>
+
+    <!-- Draft list -->
+    <div class="draft-list">
+      <div class="draft-list-head">
+        <h3>Draf Tersimpan</h3>
+        <button class="btn-xs" id="btn-dash-import">📂 Import fail JSON</button>
+      </div>
+      <div id="dash-draft-list"></div>
+    </div>
+
+    <!-- Guide -->
+    <div class="dash-guide">
+      <h3>Panduan Pantas</h3>
+      <div class="guide-steps">
+        <div class="guide-step">
+          <div class="step-num">1</div>
+          <div class="step-title">Buka Kertas Kerja</div>
+          <div class="step-desc">Klik menu "Kertas Kerja" di sebelah kiri atau butang "+ Kertas Kerja Baharu" di atas.</div>
+        </div>
+        <div class="guide-step">
+          <div class="step-num">2</div>
+          <div class="step-title">Isi Borang</div>
+          <div class="step-desc">Lengkapkan 5 bahagian: maklumat program, tujuan, pelaksanaan, bajet dan peserta.</div>
+        </div>
+        <div class="guide-step">
+          <div class="step-num">3</div>
+          <div class="step-title">Jana Dokumen</div>
+          <div class="step-desc">Klik "Jana Word ➜" untuk muat turun fail .docx yang boleh disunting dalam Microsoft Word.</div>
+        </div>
+        <div class="guide-step">
+          <div class="step-num">4</div>
+          <div class="step-title">Simpan Draf</div>
+          <div class="step-desc">Klik "💾 Simpan draf" untuk menyimpan draf secara automatik ke pelayar, atau eksport sebagai JSON.</div>
+        </div>
+        <div class="guide-step">
+          <div class="step-num">5</div>
+          <div class="step-title">Minta Bantuan</div>
+          <div class="step-desc">Klik ikon 💬 di sudut kanan bawah untuk mendapat panduan pengisian borang dari Pembantu HEP.</div>
+        </div>
+        <div class="guide-step">
+          <div class="step-num">6</div>
+          <div class="step-title">Tandatangan Manual</div>
+          <div class="step-desc">Ruangan tandatangan, semakan kewangan dan kelulusan perlu dilengkapkan secara manual dalam Word.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-body dash -->
+</div><!-- /view-dash -->
+
+<!-- ─────────────────────── VIEW: KERTAS KERJA ──────────────────── -->
+<div class="view active" id="view-kk">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PENGURUSAN DOKUMEN PROGRAM</div>
+      <h1>Penjana Kertas Kerja</h1>
+      <p>Isi maklumat program. Jana dokumen Word (.docx) yang boleh disunting dalam Microsoft Word.</p>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <!-- Dashboard Kertas Kerja -->
+    <div class="mod-dash" style="grid-template-columns:1fr 1fr 1fr;align-items:start">
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Mengikut Bulan</div>
+        <div id="chart-kk-bulan" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Mengikut Kluster</div>
+        <div id="chart-kk-kluster" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Mengikut Peringkat</div>
+        <div id="chart-kk-peringkat" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+    </div>
+
+    <div class="notice">
+      ⚠️ Tandatangan, semakan kewangan dan ruangan kelulusan akan dibiarkan kosong — lengkapkan secara manual dalam dokumen Word selepas dijana.
+    </div>
+
+    <form id="form" novalidate>
+
+      <!-- ─── 01 Maklumat Program ─────────────────── -->
+      <div class="card">
+        <div class="card-head"><div class="card-num">01</div><h2>Maklumat Program</h2></div>
+        <div class="card-body">
+          <div class="grid">
+            <div class="field full">
+              <label for="nama">Nama Program <span class="req">*</span></label>
+              <input type="text" id="nama" name="nama" required autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="anjuran">Unit Penganjur <span class="req">*</span></label>
+              <input type="text" id="anjuran" name="anjuran" required value="UNIT HAL EHWAL PELAJAR">
+            </div>
+            <div class="field">
+              <label for="kluster">Kluster Program <span class="req">*</span></label>
+              <select id="kluster" name="kluster" required>
+                <option value="">— Pilih kluster —</option>
+                <option>Aktiviti Pelajar Asrama</option>
+                <option>Badan Beruniform</option>
+                <option>Kebajikan</option>
+                <option>Kebudayaan dan Warisan</option>
+                <option>Kemahiran Teknikal</option>
+                <option>Kepimpinan</option>
+                <option>Kerohanian</option>
+                <option>Kesihatan</option>
+                <option>Keusahawanan</option>
+                <option>Komunikasi dan Bahasa</option>
+                <option>OKU</option>
+                <option>Promosi</option>
+                <option>Psikologi</option>
+                <option>Sukan</option>
+                <option>Sukarelawan</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="peringkat">Peringkat Program <span class="req">*</span></label>
+              <select id="peringkat" name="peringkat" required>
+                <option value="">— Pilih peringkat —</option>
+                <option>Kolej</option>
+                <option>Zon / Wilayah</option>
+                <option>Kebangsaan</option>
+                <option>Antarabangsa</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="tarikh">Tarikh Program <span class="req">*</span></label>
+              <input type="date" id="tarikh" name="tarikh" required>
+            </div>
+            <div class="field">
+              <label for="masa">Masa Program <span class="req">*</span></label>
+              <input type="text" id="masa" name="masa" required placeholder="cth: 8.00 pagi – 5.00 petang">
+            </div>
+            <div class="field full">
+              <label for="tempat">Tempat <span class="req">*</span></label>
+              <input type="text" id="tempat" name="tempat" required>
+            </div>
+            <div class="field">
+              <label for="sasaran">Kumpulan Sasaran <span class="req">*</span></label>
+              <input type="text" id="sasaran" name="sasaran" required>
+            </div>
+            <div class="field">
+              <label for="peserta">Bilangan Peserta <span class="req">*</span></label>
+              <input type="number" id="peserta" name="peserta" required min="1" step="1">
+            </div>
+            <div class="field full">
+              <label for="rakan">Agensi / Rakan Kolaborasi</label>
+              <input type="text" id="rakan" name="rakan" placeholder="Kosongkan jika tiada">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── 02 Tujuan & Hasil ────────────────────── -->
+      <div class="card">
+        <div class="card-head"><div class="card-num">02</div><h2>Tujuan &amp; Hasil Program</h2></div>
+        <div class="card-body">
+          <div class="grid">
+            <div class="field full">
+              <label for="latar">Latar Belakang / Pengenalan <span class="req">*</span></label>
+              <textarea id="latar" name="latar" required rows="5"></textarea>
+            </div>
+            <div class="field full">
+              <label for="objektif">Objektif Program <span class="req">*</span></label>
+              <textarea id="objektif" name="objektif" required rows="4" placeholder="Satu objektif setiap baris"></textarea>
+              <p class="hint">Masukkan setiap objektif pada baris baharu. Nombor akan dijana secara automatik.</p>
+            </div>
+            <div class="field full">
+              <label for="impak">Impak Program <span class="req">*</span></label>
+              <textarea id="impak" name="impak" required rows="3"></textarea>
+            </div>
+            <div class="field full">
+              <label for="kesimpulan">Kesimpulan <span class="req">*</span></label>
+              <textarea id="kesimpulan" name="kesimpulan" required rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── 03 Pelaksanaan ───────────────────────── -->
+      <div class="card">
+        <div class="card-head"><div class="card-num">03</div><h2>Pelaksanaan &amp; Jawatankuasa</h2></div>
+        <div class="card-body">
+
+          <div class="field full" style="margin-bottom:20px">
+            <label>Carta Perbatuan <span class="req">*</span></label>
+            <div id="perbatuan-wrap" class="dyn-table-wrap"></div>
+            <button type="button" class="btn-add" id="perbatuan-add">+ Tambah baris</button>
+          </div>
+
+          <div class="field full" style="margin-bottom:20px">
+            <label>Tentatif Program <span class="req">*</span></label>
+            <div id="tentatif-wrap" class="dyn-table-wrap"></div>
+            <button type="button" class="btn-add" id="tentatif-add">+ Tambah baris</button>
+          </div>
+
+          <div class="field full">
+            <label>Senarai Jawatankuasa (AJK) <span class="req">*</span></label>
+            <div id="ajk-wrap" class="dyn-table-wrap"></div>
+            <button type="button" class="btn-add" id="ajk-add">+ Tambah baris</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── 04 Anggaran Perbelanjaan ─────────────── -->
+      <div class="card">
+        <div class="card-head"><div class="card-num">04</div><h2>Anggaran Perbelanjaan</h2></div>
+        <div class="card-body">
+          <div class="field" style="margin-bottom:18px;max-width:360px">
+            <label for="sumber">Sumber Peruntukan <span class="req">*</span></label>
+            <input type="text" id="sumber" name="sumber" required placeholder="cth: Peruntukan aktiviti pelajar">
+          </div>
+          <div class="field full">
+            <label>Butiran Perbelanjaan <span class="req">*</span></label>
+            <div id="bajet-wrap" class="dyn-table-wrap"></div>
+            <button type="button" class="btn-add" id="bajet-add">+ Tambah baris</button>
+            <div class="budget-total" id="budget-total">Jumlah: RM 0.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── 05 Peserta & Pegawai ─────────────────── -->
+      <div class="card">
+        <div class="card-head"><div class="card-num">05</div><h2>Peserta &amp; Pegawai</h2></div>
+        <div class="card-body">
+
+          <div class="field full" style="margin-bottom:22px">
+            <label>Senarai Peserta <span class="req">*</span></label>
+            <div id="senarai-wrap" class="dyn-table-wrap"></div>
+            <button type="button" class="btn-add" id="senarai-add">+ Tambah peserta</button>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="pegawai">Pegawai Untuk Dihubungi <span class="req">*</span></label>
+              <input type="text" id="pegawai" name="pegawai" required>
+            </div>
+            <div class="field">
+              <label for="telefon">No. Telefon <span class="req">*</span></label>
+              <input type="tel" id="telefon" name="telefon" required>
+            </div>
+            <div class="field">
+              <label for="emel">E-mel <span class="req">*</span></label>
+              <input type="email" id="emel" name="emel" required>
+            </div>
+            <div class="field full">
+              <label for="alamat">Alamat Institusi <span class="req">*</span></label>
+              <textarea id="alamat" name="alamat" required rows="3">Kolej Komuniti Mas Gading
+Lot 742–750, Off Parent Lot 726
+94000 Bau, Sarawak</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form><!-- /form -->
+  </div><!-- /page-body -->
+</div><!-- /view-kk -->
+
+<!-- ─────────────────────── VIEW: MEMO ──────────────────────────── -->
+<div class="view" id="view-memo">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PENGURUSAN DOKUMEN</div>
+      <h1>Penjana Memo</h1>
+      <p>Jana memo rasmi bertajuk kepada pihak berkenaan dalam format Word.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <!-- Dashboard Memo -->
+    <div class="mod-dash" style="grid-template-columns:1fr;align-items:start">
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Bilangan Memo Dijana Mengikut Bulan</div>
+        <div id="chart-memo-bulan" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+    </div>
+    <div class="mod-dash-tip">💡 <div><b>Cara Guna</b>Isi no. rujukan, perkara dan isi memo. Klik Jana Memo Word untuk muat turun. Nama fail: <code>Memo_[rujukan].docx</code></div></div>
+    <div class="notice">⚠️ Ruangan tandatangan dibiarkan kosong — lengkapkan secara manual dalam Word.</div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">01</div><h2>Maklumat Memo</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field"><label for="memo-rujukan">No. Rujukan <span class="req">*</span></label><input type="text" id="memo-rujukan" required placeholder="cth: 2025/001"></div>
+          <div class="field"><label for="memo-tarikh">Tarikh <span class="req">*</span></label><input type="date" id="memo-tarikh" required></div>
+          <div class="field full"><label for="memo-kepada">Kepada <span class="req">*</span></label><input type="text" id="memo-kepada" required placeholder="cth: Semua Kakitangan"></div>
+          <div class="field full"><label for="memo-drpd">Daripada <span class="req">*</span></label><input type="text" id="memo-drpd" required placeholder="cth: Ketua Unit HEP"></div>
+          <div class="field full"><label for="memo-perkara">Perkara <span class="req">*</span></label><input type="text" id="memo-perkara" required placeholder="cth: Makluman Program..."></div>
+          <div class="field full"><label for="memo-isi">Isi Memo <span class="req">*</span></label><textarea id="memo-isi" required rows="8" placeholder="Satu perenggan setiap baris. Masukkan kandungan memo di sini..."></textarea></div>
+          <div class="field"><label for="memo-nama-ttd">Nama Penandatangan</label><input type="text" id="memo-nama-ttd" placeholder="Dibiarkan kosong jika tiada"></div>
+          <div class="field"><label for="memo-jawatan-ttd">Jawatan Penandatangan</label><input type="text" id="memo-jawatan-ttd" placeholder="cth: Pegawai HEP"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:100px">
+      <button type="button" class="btn btn-primary" id="btn-memo-generate">Jana Memo Word ➜</button>
+    </div>
+  </div>
+</div><!-- /view-memo -->
+
+<!-- ─────────────────────── VIEW: SURAT LANTIKAN AJK ────────────── -->
+<div class="view" id="view-ajk">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PENGURUSAN DOKUMEN</div>
+      <h1>Surat Lantikan AJK</h1>
+      <p>Jana surat pelantikan ahli jawatankuasa program secara individu.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <!-- Dashboard Surat AJK -->
+    <div class="mod-dash" style="grid-template-columns:1fr;align-items:start">
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Bilangan Surat AJK Dijana Mengikut Bulan</div>
+        <div id="chart-ajk-bulan" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+    </div>
+    <div class="mod-dash-tip">💡 <div><b>Cara Guna</b>Jana surat berasingan untuk setiap ahli AJK. Isi semula borang dan klik jana untuk AJK seterusnya. Nama fail: <code>Surat_AJK_[nama].docx</code></div></div>
+    <div class="notice">⚠️ Ruangan tandatangan dibiarkan kosong untuk dilengkapkan manual dalam Word.</div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">01</div><h2>Maklumat Surat</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field"><label for="ajk-tarikh">Tarikh Surat <span class="req">*</span></label><input type="date" id="ajk-tarikh" required></div>
+          <div class="field"><label for="ajk-noruj">No. Rujukan <span class="req">*</span></label><input type="text" id="ajk-noruj" required placeholder="cth: 2025/AJK/001"></div>
+          <div class="field full"><label for="ajk-nama-penerima">Nama Penerima <span class="req">*</span></label><input type="text" id="ajk-nama-penerima" required></div>
+          <div class="field full"><label for="ajk-jawatan-penerima">Jawatan Penerima</label><input type="text" id="ajk-jawatan-penerima" placeholder="cth: Pensyarah"></div>
+          <div class="field full"><label for="ajk-alamat-penerima">Alamat Penerima</label><textarea id="ajk-alamat-penerima" rows="2" placeholder="Alamat jika berkenaan"></textarea></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">02</div><h2>Maklumat Program &amp; Lantikan</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field full"><label for="ajk-nama-prog">Nama Program <span class="req">*</span></label><input type="text" id="ajk-nama-prog" required></div>
+          <div class="field"><label for="ajk-tarikh-prog">Tarikh Program <span class="req">*</span></label><input type="date" id="ajk-tarikh-prog" required></div>
+          <div class="field"><label for="ajk-tempat-prog">Tempat Program <span class="req">*</span></label><input type="text" id="ajk-tempat-prog" required></div>
+          <div class="field"><label for="ajk-jawatan-lantik">Jawatan Dilantik <span class="req">*</span></label><input type="text" id="ajk-jawatan-lantik" required placeholder="cth: Pengerusi"></div>
+          <div class="field"><label for="ajk-tempoh">Tempoh Lantikan</label><input type="text" id="ajk-tempoh" placeholder="cth: Semasa program sahaja"></div>
+          <div class="field full"><label for="ajk-skop">Skop Tugas <span class="req">*</span></label><textarea id="ajk-skop" required rows="4" placeholder="Satu tugas setiap baris"></textarea></div>
+          <div class="field"><label for="ajk-nama-ttd">Nama Penandatangan</label><input type="text" id="ajk-nama-ttd"></div>
+          <div class="field"><label for="ajk-jawatan-ttd">Jawatan Penandatangan</label><input type="text" id="ajk-jawatan-ttd" placeholder="cth: Ketua Unit HEP"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:100px">
+      <button type="button" class="btn btn-primary" id="btn-ajk-generate">Jana Surat AJK Word ➜</button>
+    </div>
+  </div>
+</div><!-- /view-ajk -->
+
+<!-- ─────────────────────── VIEW: SURAT LANTIKAN PENCERAMAH ─────── -->
+<div class="view" id="view-penceramah">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PENGURUSAN DOKUMEN</div>
+      <h1>Surat Lantikan Penceramah</h1>
+      <p>Jana surat jemputan penceramah atau fasilitator program.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <!-- Dashboard Surat Penceramah -->
+    <div class="mod-dash" style="grid-template-columns:1fr;align-items:start">
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Bilangan Surat Penceramah Dijana Mengikut Bulan</div>
+        <div id="chart-penc-bulan" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+    </div>
+    <div class="mod-dash-tip">💡 <div><b>Cara Guna</b>Jana surat berasingan untuk setiap penceramah. Nama fail: <code>Surat_Penceramah_[nama].docx</code></div></div>
+    <div class="notice">⚠️ Ruangan tandatangan dibiarkan kosong untuk dilengkapkan manual dalam Word.</div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">01</div><h2>Maklumat Penceramah</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field"><label for="penc-tarikh">Tarikh Surat <span class="req">*</span></label><input type="date" id="penc-tarikh" required></div>
+          <div class="field"><label for="penc-noruj">No. Rujukan <span class="req">*</span></label><input type="text" id="penc-noruj" required placeholder="cth: 2025/PENC/001"></div>
+          <div class="field full"><label for="penc-nama">Nama Penceramah <span class="req">*</span></label><input type="text" id="penc-nama" required></div>
+          <div class="field full"><label for="penc-jawatan">Jawatan / Gelaran</label><input type="text" id="penc-jawatan" placeholder="cth: Profesor Madya"></div>
+          <div class="field full"><label for="penc-org">Organisasi</label><input type="text" id="penc-org" placeholder="cth: Universiti Malaysia Sarawak"></div>
+          <div class="field full"><label for="penc-alamat">Alamat Penerima</label><textarea id="penc-alamat" rows="3" placeholder="Alamat lengkap penerima"></textarea></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">02</div><h2>Maklumat Program &amp; Sesi</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field full"><label for="penc-nama-prog">Nama Program <span class="req">*</span></label><input type="text" id="penc-nama-prog" required></div>
+          <div class="field"><label for="penc-tarikh-prog">Tarikh Program <span class="req">*</span></label><input type="date" id="penc-tarikh-prog" required></div>
+          <div class="field"><label for="penc-masa-prog">Masa Program <span class="req">*</span></label><input type="text" id="penc-masa-prog" required placeholder="cth: 9.00 pagi – 12.00 tengahari"></div>
+          <div class="field full"><label for="penc-tempat-prog">Tempat Program <span class="req">*</span></label><input type="text" id="penc-tempat-prog" required></div>
+          <div class="field full"><label for="penc-tajuk">Tajuk Ceramah / Sesi <span class="req">*</span></label><input type="text" id="penc-tajuk" required placeholder="cth: Kepimpinan Berkesan"></div>
+          <div class="field"><label for="penc-bayaran">Honorarium (RM)</label><input type="number" id="penc-bayaran" min="0" step="0.01" placeholder="0 jika tiada"></div>
+          <div class="field"><label for="penc-nama-ttd">Nama Penandatangan</label><input type="text" id="penc-nama-ttd"></div>
+          <div class="field"><label for="penc-jawatan-ttd">Jawatan Penandatangan</label><input type="text" id="penc-jawatan-ttd" placeholder="cth: Ketua Unit HEP"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:100px">
+      <button type="button" class="btn btn-primary" id="btn-penc-generate">Jana Surat Penceramah Word ➜</button>
+    </div>
+  </div>
+</div><!-- /view-penceramah -->
+
+<!-- ─────────────────────── VIEW: SIJIL ─────────────────────────── -->
+<div class="view" id="view-sijil">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PENGURUSAN DOKUMEN</div>
+      <h1>Sijil Bernombor Siri</h1>
+      <p>Jana sijil penyertaan untuk setiap peserta. Setiap sijil mempunyai nombor siri unik.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <!-- Dashboard Sijil -->
+    <div class="mod-dash" style="grid-template-columns:1fr 1fr;align-items:start">
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Penerima Mengikut Program</div>
+        <div id="chart-sijil-program" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Penerima Mengikut Bulan</div>
+        <div id="chart-sijil-bulan" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+    </div>
+    <div class="mod-dash-tip">💡 <div><b>Cara Guna</b>Tambah nama penerima dalam jadual. Nombor siri dijana automatik mengikut turutan. Nama fail: <code>Sijil_[program].docx</code></div></div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">01</div><h2>Maklumat Sijil</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field full"><label for="sijil-nama-prog">Nama Program <span class="req">*</span></label><input type="text" id="sijil-nama-prog" required></div>
+          <div class="field"><label for="sijil-tarikh-prog">Tarikh Program <span class="req">*</span></label><input type="date" id="sijil-tarikh-prog" required></div>
+          <div class="field"><label for="sijil-tempat-prog">Tempat Program <span class="req">*</span></label><input type="text" id="sijil-tempat-prog" required></div>
+          <div class="field"><label for="sijil-penandatangan">Nama Penandatangan <span class="req">*</span></label><input type="text" id="sijil-penandatangan" required></div>
+          <div class="field"><label for="sijil-jawatan-ttd">Jawatan Penandatangan <span class="req">*</span></label><input type="text" id="sijil-jawatan-ttd" required placeholder="cth: Pengarah"></div>
+          <div class="field"><label for="sijil-prefiks">Prefiks Nombor Siri <span class="req">*</span></label><input type="text" id="sijil-prefiks" required value="KKMG" placeholder="cth: KKMG"></div>
+          <div class="field"><label for="sijil-tahun">Tahun</label><input type="number" id="sijil-tahun" value="2025" min="2020" max="2099" step="1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">02</div><h2>Senarai Penerima Sijil <span class="req">*</span></h2></div>
+      <div class="card-body">
+        <div id="sijil-penerima-wrap" class="dyn-table-wrap"></div>
+        <button type="button" class="btn-add" id="sijil-penerima-add">+ Tambah penerima</button>
+        <p class="hint" style="margin-top:10px">Nombor siri akan dijana automatik berdasarkan prefiks, tahun dan nombor giliran.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:100px">
+      <button type="button" class="btn btn-primary" id="btn-sijil-generate">Jana Sijil Word ➜</button>
+    </div>
+  </div>
+</div><!-- /view-sijil -->
+
+<!-- ─────────────────────── VIEW: LAPORAN PROGRAM ───────────────── -->
+<div class="view" id="view-laporan">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PENGURUSAN DOKUMEN</div>
+      <h1>Laporan Program</h1>
+      <p>Jana laporan program lengkap selepas pelaksanaan.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <!-- Dashboard Laporan -->
+    <div class="mod-dash" style="grid-template-columns:1fr 1fr;align-items:start">
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Mengikut Kluster</div>
+        <div id="chart-lap-kluster" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Mengikut Bulan</div>
+        <div id="chart-lap-bulan" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+    </div>
+    <div class="mod-dash-tip">💡 <div><b>Cara Guna</b>Isi setiap bahagian selepas program selesai. Peratusan kehadiran dikira automatik jika bilangan didaftar dan hadir diisi. Nama fail: <code>Laporan_[program].docx</code></div></div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">01</div><h2>Maklumat Program</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field full"><label for="lap-nama">Nama Program <span class="req">*</span></label><input type="text" id="lap-nama" required></div>
+          <div class="field"><label for="lap-kluster">Kluster</label>
+            <select id="lap-kluster"><option value="">—</option><option>Aktiviti Pelajar Asrama</option><option>Badan Beruniform</option><option>Kebajikan</option><option>Kebudayaan dan Warisan</option><option>Kemahiran Teknikal</option><option>Kepimpinan</option><option>Kerohanian</option><option>Kesihatan</option><option>Keusahawanan</option><option>Komunikasi dan Bahasa</option><option>OKU</option><option>Promosi</option><option>Psikologi</option><option>Sukan</option><option>Sukarelawan</option></select></div>
+          <div class="field"><label for="lap-peringkat">Peringkat</label>
+            <select id="lap-peringkat"><option value="">—</option><option>Kolej</option><option>Zon / Wilayah</option><option>Kebangsaan</option><option>Antarabangsa</option></select></div>
+          <div class="field"><label for="lap-tarikh">Tarikh Pelaksanaan <span class="req">*</span></label><input type="date" id="lap-tarikh" required></div>
+          <div class="field"><label for="lap-tempat">Tempat <span class="req">*</span></label><input type="text" id="lap-tempat" required></div>
+          <div class="field"><label for="lap-penganjur">Penganjur</label><input type="text" id="lap-penganjur" value="Unit Hal Ehwal Pelajar"></div>
+          <div class="field"><label for="lap-bil-daftar">Bilangan Peserta Didaftar</label><input type="number" id="lap-bil-daftar" min="0" step="1"></div>
+          <div class="field"><label for="lap-bil-hadir">Bilangan Peserta Hadir</label><input type="number" id="lap-bil-hadir" min="0" step="1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">02</div><h2>Kandungan Laporan</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field full"><label for="lap-latar">Latar Belakang <span class="req">*</span></label><textarea id="lap-latar" required rows="4"></textarea></div>
+          <div class="field full"><label for="lap-objektif">Objektif Program <span class="req">*</span></label><textarea id="lap-objektif" required rows="3" placeholder="Satu objektif setiap baris"></textarea></div>
+          <div class="field full"><label for="lap-pelaksanaan">Pelaksanaan Program <span class="req">*</span></label><textarea id="lap-pelaksanaan" required rows="4" placeholder="Huraikan bagaimana program dilaksanakan, satu perenggan/poin setiap baris"></textarea></div>
+          <div class="field full"><label for="lap-pencapaian">Pencapaian / Hasil Program <span class="req">*</span></label><textarea id="lap-pencapaian" required rows="4" placeholder="Satu pencapaian setiap baris"></textarea></div>
+          <div class="field full"><label for="lap-cabaran">Cabaran dan Masalah</label><textarea id="lap-cabaran" rows="3" placeholder="Satu cabaran setiap baris"></textarea></div>
+          <div class="field full"><label for="lap-cadangan">Cadangan Penambahbaikan</label><textarea id="lap-cadangan" rows="3" placeholder="Satu cadangan setiap baris"></textarea></div>
+          <div class="field full"><label for="lap-gambar">Keterangan Gambar</label><textarea id="lap-gambar" rows="3" placeholder="Keterangan setiap gambar pada baris baharu. Gambar perlu dilampirkan secara manual dalam Word."></textarea></div>
+          <div class="field full"><label for="lap-kesimpulan">Kesimpulan <span class="req">*</span></label><textarea id="lap-kesimpulan" required rows="3"></textarea></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">03</div><h2>Perbelanjaan Sebenar</h2></div>
+      <div class="card-body">
+        <div id="lap-belanja-wrap" class="dyn-table-wrap"></div>
+        <button type="button" class="btn-add" id="lap-belanja-add">+ Tambah baris</button>
+        <div class="budget-total" id="lap-belanja-total">Jumlah: RM 0.00</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">04</div><h2>Penyedia Laporan</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field"><label for="lap-nama-penyedia">Nama Penyedia <span class="req">*</span></label><input type="text" id="lap-nama-penyedia" required></div>
+          <div class="field"><label for="lap-jawatan-penyedia">Jawatan Penyedia</label><input type="text" id="lap-jawatan-penyedia" placeholder="cth: Pegawai HEP"></div>
+          <div class="field"><label for="lap-tarikh-laporan">Tarikh Laporan <span class="req">*</span></label><input type="date" id="lap-tarikh-laporan" required></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:100px">
+      <button type="button" class="btn btn-primary" id="btn-lap-generate">Jana Laporan Word ➜</button>
+    </div>
+  </div>
+</div><!-- /view-laporan -->
+
+<!-- ─────────────────────── VIEW: PENILAIAN KURSUS ──────────────── -->
+<div class="view" id="view-penilaian">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">PENGURUSAN DOKUMEN</div>
+      <h1>Penilaian Kursus</h1>
+      <p>Kumpul maklum balas peserta program secara dalam talian (tempatan). Jana ringkasan dalam Word.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <!-- Dashboard Penilaian -->
+    <div class="mod-dash" style="grid-template-columns:1fr 1fr;align-items:start">
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Kursus Dinilai Mengikut Bulan</div>
+        <div id="chart-pen-kursus" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+      <div class="mod-dash-card" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:12px;font-weight:600;color:#1a4d6d">Bilangan Penilaian Mengikut Bulan</div>
+        <div id="chart-pen-respons" style="width:100%"><p style="color:#9ba8b5;font-size:12px;margin:0">Tiada rekod</p></div>
+      </div>
+    </div>
+    <div class="mod-dash-tip">💡 <div><b>Cara Guna</b>Setiap peserta mengisi borang ini secara bergiliran pada komputer yang sama. Klik "+ Tambah Respons" selepas setiap peserta selesai. Jana ringkasan apabila semua respons dikumpul.</div></div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">01</div><h2>Maklumat Program</h2></div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="field full"><label for="pen-nama">Nama Program <span class="req">*</span></label><input type="text" id="pen-nama" required></div>
+          <div class="field"><label for="pen-tarikh">Tarikh Program <span class="req">*</span></label><input type="date" id="pen-tarikh" required></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-num">02</div><h2>Soalan Penilaian (Skala 1 = Sangat Tidak Setuju, 5 = Sangat Setuju)</h2></div>
+      <div class="card-body">
+        <p class="hint" style="margin-bottom:14px">Soalan di bawah adalah standard. Pegawai mengisi borang ini bagi pihak peserta, atau peserta boleh mengisi secara bergilir-gilir pada komputer yang sama.</p>
+        <div id="pen-soalan-list"></div>
+        <div style="margin-top:16px">
+          <label class="field"><span style="font-size:12px;font-weight:700;color:#425e72;display:block;margin-bottom:6px">Ulasan / Cadangan Peserta (pilihan)</span>
+          <textarea id="pen-ulasan" rows="3" placeholder="Satu ulasan setiap baris"></textarea></label>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="pen-keputusan-card" style="display:none">
+      <div class="card-head"><div class="card-num">03</div><h2>Ringkasan Keputusan</h2></div>
+      <div class="card-body">
+        <div id="pen-keputusan-wrap"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:100px">
+      <button type="button" class="btn" id="btn-pen-tambah">+ Tambah Respons Peserta</button>
+      <button type="button" class="btn btn-primary" id="btn-pen-generate" style="display:none">Jana Ringkasan Word ➜</button>
+    </div>
+  </div>
+</div><!-- /view-penilaian -->
+
+<!-- ─────────────────── VIEW: ANALISIS KEBERKESANAN ─────────────── -->
+<div class="view" id="view-analisis">
+  <div class="page-header">
+    <div class="page-header-text">
+      <div class="badge">LAPORAN &amp; ANALISIS</div>
+      <h1>Analisis Keberkesanan</h1>
+      <p>Statistik penjanaan dokumen, analisis kluster, peringkat dan trend bulanan berdasarkan rekod sebenar.</p>
+    </div>
+    <button class="btn" id="btn-an-clear" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5">🗑 Padam Semua Rekod</button>
+  </div>
+  <div class="page-body">
+
+    <!-- Kad ringkasan -->
+    <div class="dash-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-val" id="an-total">0</div>
+        <div class="stat-lbl">Jumlah Dokumen Dijana</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-val" id="an-kk">0</div>
+        <div class="stat-lbl">Kertas Kerja</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-val" id="an-laporan">0</div>
+        <div class="stat-lbl">Laporan Program</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏅</div>
+        <div class="stat-val" id="an-sijil">0</div>
+        <div class="stat-lbl">Sijil Dijana</div>
+      </div>
+    </div>
+
+    <!-- Carta kluster -->
+    <div class="card">
+      <div class="card-head"><div class="card-num">01</div><h2>Program Mengikut Kluster</h2></div>
+      <div class="card-body">
+        <p style="font-size:12px;color:#607286;margin-bottom:12px">Berdasarkan rekod Kertas Kerja yang telah dijana.</p>
+        <div id="chart-an-kluster"></div>
+      </div>
+    </div>
+
+    <!-- Carta peringkat -->
+    <div class="card">
+      <div class="card-head"><div class="card-num">02</div><h2>Program Mengikut Peringkat</h2></div>
+      <div class="card-body">
+        <p style="font-size:12px;color:#607286;margin-bottom:12px">Kolej, Zon/Wilayah, Kebangsaan dan lain-lain berdasarkan Kertas Kerja dijana.</p>
+        <div id="chart-an-peringkat"></div>
+      </div>
+    </div>
+
+    <!-- Carta bulanan -->
+    <div class="card">
+      <div class="card-head"><div class="card-num">03</div><h2>Trend Penjanaan Dokumen (12 Bulan Terkini)</h2></div>
+      <div class="card-body">
+        <p style="font-size:12px;color:#607286;margin-bottom:12px">Semua jenis dokumen — Kertas Kerja, Memo, Surat, Sijil, Laporan, Penilaian.</p>
+        <div id="chart-an-bulanan"></div>
+      </div>
+    </div>
+
+    <!-- Log rekod -->
+    <div class="card">
+      <div class="card-head"><div class="card-num">04</div><h2>Log 20 Rekod Terkini</h2></div>
+      <div class="card-body">
+        <div id="an-log"></div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /view-analisis -->
+
+</main>
+
+<!-- ─── Sticky footer ─────────────────────────── -->
+<div class="sticky-footer">
+  <div>
+    <strong style="font-size:14px">Dokumen Word (.docx)</strong>
+    <div class="status-msg" id="status" role="status" aria-live="polite">
+      Semua data diproses dalam pelayar — tiada data dihantar ke pelayan.
+    </div>
+  </div>
+  <div class="actions">
+    <button type="button" class="btn" id="btn-save">💾 Simpan draf</button>
+    <button type="button" class="btn" id="btn-load">📂 Buka draf</button>
+    <button type="button" class="btn btn-primary" id="btn-generate">Jana Word ➜</button>
+  </div>
+</div>
+
+<!-- Hidden file input for draft loading -->
+<input type="file" id="file-import" accept="application/json,.json" hidden>
+
+<!-- ══════════════════════════  SCRIPTS  ════════════════════════════ -->
+<script src="docx.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   Dynamic table widget
+   ═══════════════════════════════════════════════════════════════════ */
+function DynTable(wrapId, addBtnId, columns) {
+  /* columns: [{key, label, type, width, placeholder, required}] */
+  const wrap = document.getElementById(wrapId);
+  const addBtn = document.getElementById(addBtnId);
+  let rows = [];
+
+  function render() {
+    const t = document.createElement('table');
+    t.className = 'dyn-table';
+    // head
+    const thead = t.createTHead();
+    const hrow = thead.insertRow();
+    columns.forEach(c => {
+      const th = document.createElement('th');
+      th.textContent = c.label;
+      if (c.width) th.style.width = c.width;
+      hrow.appendChild(th);
+    });
+    const thDel = document.createElement('th');
+    thDel.className = 'col-action';
+    thDel.textContent = '';
+    hrow.appendChild(thDel);
+
+    // body
+    const tbody = t.createTBody();
+    rows.forEach((r, ri) => {
+      const tr = tbody.insertRow();
+      columns.forEach(c => {
+        const td = tr.insertCell();
+        const inp = document.createElement('input');
+        inp.type = c.type || 'text';
+        inp.value = r[c.key] || '';
+        inp.placeholder = c.placeholder || '';
+        if (c.min !== undefined) inp.min = c.min;
+        if (c.step) inp.step = c.step;
+        inp.addEventListener('input', () => {
+          rows[ri][c.key] = inp.value;
+          if (wrapId === 'bajet-wrap') calcBudget();
+        });
+        td.appendChild(inp);
+      });
+      const tdDel = tr.insertCell();
+      tdDel.className = 'col-action';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-del';
+      btn.title = 'Buang baris';
+      btn.innerHTML = '×';
+      btn.addEventListener('click', () => {
+        rows.splice(ri, 1);
+        render();
+        if (wrapId === 'bajet-wrap') calcBudget();
+      });
+      tdDel.appendChild(btn);
+    });
+
+    wrap.innerHTML = '';
+    wrap.appendChild(t);
+  }
+
+  function addRow() {
+    const r = {};
+    columns.forEach(c => { r[c.key] = ''; });
+    rows.push(r);
+    render();
+    // focus first cell of new row
+    const inputs = wrap.querySelectorAll('tbody tr:last-child input');
+    if (inputs[0]) inputs[0].focus();
+  }
+
+  addBtn.addEventListener('click', addRow);
+
+  // ── Public API ──────────────────────────────────
+  function getRows() {
+    return rows.map(r => columns.map(c => r[c.key] || ''));
+  }
+
+  function setRows(data) {
+    rows = data.map(r => {
+      const obj = {};
+      columns.forEach((c, i) => { obj[c.key] = r[i] !== undefined ? String(r[i]) : ''; });
+      return obj;
+    });
+    render();
+    if (wrapId === 'bajet-wrap') calcBudget();
+  }
+
+  function validate() {
+    // Returns error string or null
+    for (let i = 0; i < rows.length; i++) {
+      for (const c of columns) {
+        if (c.required && !rows[i][c.key].trim()) {
+          return `Baris ${i + 1} dalam jadual "${columns[0].label}" tidak lengkap.`;
+        }
+      }
+    }
+    return null;
+  }
+
+  // initial render with one empty row
+  addRow();
+
+  return { getRows, setRows, validate, addRow };
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Initialise dynamic tables
+   ═══════════════════════════════════════════════════════════════════ */
+const tPerbatuan = DynTable('perbatuan-wrap', 'perbatuan-add', [
+  { key: 'aktiviti', label: 'Aktiviti', placeholder: 'cth: Penyediaan kertas kerja', required: true },
+  { key: 'tarikh',   label: 'Tarikh / Tempoh', placeholder: 'cth: 1 – 5 November 2025', required: true },
+]);
+
+const tTentatif = DynTable('tentatif-wrap', 'tentatif-add', [
+  { key: 'masa',    label: 'Masa',    placeholder: 'cth: 8.00 pagi', width: '160px', required: true },
+  { key: 'aktiviti',label: 'Aktiviti', placeholder: 'cth: Pendaftaran peserta',     required: true },
+]);
+
+const tAjk = DynTable('ajk-wrap', 'ajk-add', [
+  { key: 'jawatan', label: 'Jawatan',              placeholder: 'cth: Pengerusi',      required: true },
+  { key: 'nama',    label: 'Nama',                 placeholder: 'Nama pegawai',        required: true },
+  { key: 'tugas',   label: 'Tugas / Tanggungjawab',placeholder: 'cth: Menyelaras program', required: true },
+]);
+
+const tBajet = DynTable('bajet-wrap', 'bajet-add', [
+  { key: 'perbelanjaan', label: 'Perbelanjaan',       placeholder: 'cth: Bahan bengkel',   required: true },
+  { key: 'kuantiti',     label: 'Kuantiti',  type: 'number', width: '90px', min: '0', step: '1', placeholder: '0', required: true },
+  { key: 'harga',        label: 'Harga / Unit (RM)', type: 'number', width: '130px', min: '0', step: '0.01', placeholder: '0.00', required: true },
+  { key: 'jumlah',       label: 'Jumlah (RM)', width: '110px' },
+  { key: 'objek',        label: 'Objek Kewangan', placeholder: 'cth: Bekalan', required: true },
+]);
+
+const tSenarai = DynTable('senarai-wrap', 'senarai-add', [
+  { key: 'nama',     label: 'Nama Peserta',        placeholder: 'Nama penuh',         required: true },
+  { key: 'no',       label: 'No. Pendaftaran',     placeholder: 'cth: KK2025001',     required: true },
+  { key: 'program',  label: 'Program Pengajian',   placeholder: 'cth: Diploma IT',    required: true },
+]);
+
+/* ── Budget calculation ───────────────────────── */
+function calcBudget() {
+  const wrap = document.getElementById('bajet-wrap');
+  const totalEl = document.getElementById('budget-total');
+  let total = 0;
+  let hasError = false;
+
+  const rows = wrap.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const qty   = Number(inputs[1]?.value) || 0;
+    const price = Number(inputs[2]?.value) || 0;
+    const amt   = Math.round(qty * price * 100) / 100;
+    total = Math.round((total + amt) * 100) / 100;
+    if (inputs[3]) {
+      inputs[3].value = (qty && price) ? amt.toFixed(2) : '';
+      inputs[3].readOnly = true;
+      inputs[3].style.background = '#f0f7f5';
+      inputs[3].style.color = '#147b6c';
+    }
+  });
+
+  totalEl.innerHTML = hasError
+    ? '<span class="budget-error">Semak nilai kuantiti dan harga</span>'
+    : 'Jumlah Keseluruhan: <strong>RM ' + total.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</strong>';
+}
+
+// Recalc on every input in budget table
+document.getElementById('bajet-wrap').addEventListener('input', calcBudget);
+
+/* ═══════════════════════════════════════════════════════════════════
+   Helpers
+   ═══════════════════════════════════════════════════════════════════ */
+function say(msg, ok = true) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.style.color = ok ? '#2a6e62' : '#c0392b';
+}
+
+function download(bytes, name, type) {
+  const url = URL.createObjectURL(new Blob([bytes], { type }));
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+
+function getSimpleFields() {
+  const ids = ['nama','anjuran','kluster','peringkat','tarikh','masa','tempat',
+                'sasaran','peserta','rakan','latar','objektif','impak','kesimpulan',
+                'sumber','pegawai','telefon','emel','alamat'];
+  const d = {};
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    d[id] = el ? el.value.trim() : '';
+  });
+  return d;
+}
+
+function formatDate(raw) {
+  if (!raw) return '';
+  try {
+    return new Date(raw + 'T12:00:00').toLocaleDateString('ms-MY', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+  } catch(e) { return raw; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Generate Word
+   ═══════════════════════════════════════════════════════════════════ */
+document.getElementById('btn-generate').addEventListener('click', () => {
+  // Basic validation
+  const simpleIds = ['nama','anjuran','kluster','peringkat','tarikh','masa','tempat',
+                     'sasaran','peserta','latar','objektif','impak','kesimpulan',
+                     'sumber','pegawai','telefon','emel','alamat'];
+  for (const id of simpleIds) {
+    const el = document.getElementById(id);
+    if (el && el.required && !el.value.trim()) {
+      say('Sila lengkapkan medan: ' + (el.labels[0]?.textContent?.replace(' *','') || id), false);
+      el.focus();
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return;
+    }
+  }
+
+  const tables = [
+    { t: tPerbatuan, name: 'Carta Perbatuan' },
+    { t: tTentatif,  name: 'Tentatif Program' },
+    { t: tAjk,       name: 'Jawatankuasa (AJK)' },
+    { t: tBajet,     name: 'Anggaran Perbelanjaan' },
+    { t: tSenarai,   name: 'Senarai Peserta' },
+  ];
+  for (const { t, name } of tables) {
+    const err = t.validate();
+    if (err) { say(err, false); return; }
+    if (t.getRows().length === 0) {
+      say(`Jadual ${name} tidak boleh kosong.`, false);
+      return;
+    }
+  }
+
+  try {
+    const d = getSimpleFields();
+    d.tarikh = formatDate(d.tarikh);
+    d.perbatuan = tPerbatuan.getRows();
+    d.tentatif  = tTentatif.getRows();
+    d.ajk       = tAjk.getRows();
+    d.bajet     = tBajet.getRows();
+    d.senarai   = tSenarai.getRows();
+
+    const bytes = KKMG.build(d);
+    const safeName = d.nama.replace(/[^a-z0-9\u00C0-\u024F\s]/gi, '').trim().replace(/\s+/g, '_').slice(0, 70);
+    download(bytes, 'Kertas_Kerja_' + safeName + '.docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    recordDoc('KertasKerja', { nama: d.nama, kluster: d.kluster, peringkat: d.peringkat, bulan: (getVal('tarikh')||'').slice(0,7)||new Date().toISOString().slice(0,7) });
+    say('✓ Dokumen Word berjaya dijana. Semak dan cetak dalam Microsoft Word.');
+  } catch (err) {
+    say('✗ Gagal jana dokumen: ' + err.message, false);
+    console.error(err);
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   Save / Load draft
+   ═══════════════════════════════════════════════════════════════════ */
+document.getElementById('btn-save').addEventListener('click', () => {
+  const d = getSimpleFields();
+  d._perbatuan = tPerbatuan.getRows();
+  d._tentatif  = tTentatif.getRows();
+  d._ajk       = tAjk.getRows();
+  d._bajet     = tBajet.getRows();
+  d._senarai   = tSenarai.getRows();
+  const payload = JSON.stringify({ version: 2, data: d }, null, 2);
+  download(new TextEncoder().encode(payload), 'Draf_Kertas_Kerja.json', 'application/json');
+  say('✓ Draf disimpan. Simpan fail JSON tersebut untuk sambung kemudian.');
+});
+
+document.getElementById('btn-load').addEventListener('click', () => {
+  document.getElementById('file-import').click();
+});
+
+document.getElementById('file-import').addEventListener('change', async e => {
+  try {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5_000_000) throw new Error('Fail terlalu besar (>5 MB)');
+    const json = JSON.parse(await file.text());
+    if (!json.version || !json.data) throw new Error('Format draf tidak sah');
+
+    const simpleIds = ['nama','anjuran','kluster','peringkat','tarikh','masa','tempat',
+                       'sasaran','peserta','rakan','latar','objektif','impak','kesimpulan',
+                       'sumber','pegawai','telefon','emel','alamat'];
+    for (const id of simpleIds) {
+      const el = document.getElementById(id);
+      if (el && json.data[id] !== undefined) el.value = json.data[id];
+    }
+
+    // Support both v1 (pipe-based) and v2 (array-based) drafts
+    if (json.version >= 2) {
+      if (json.data._perbatuan) tPerbatuan.setRows(json.data._perbatuan);
+      if (json.data._tentatif)  tTentatif.setRows(json.data._tentatif);
+      if (json.data._ajk)       tAjk.setRows(json.data._ajk);
+      if (json.data._bajet)     tBajet.setRows(json.data._bajet);
+      if (json.data._senarai)   tSenarai.setRows(json.data._senarai);
+    }
+
+    calcBudget();
+    say('✓ Draf berjaya dibuka. Semak maklumat dan jana dokumen apabila bersedia.');
+  } catch (err) {
+    say('✗ Draf tidak dapat dibuka: ' + err.message, false);
+  }
+  e.target.value = '';
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   Example / demo data (fictional)
+   ═══════════════════════════════════════════════════════════════════ */
+/* initial budget calc */
+calcBudget();
+
+/* ═══════════════════════════════════════════════════════════════════
+   Navigation — switch views
+   ═══════════════════════════════════════════════════════════════════ */
+const VIEWS = {
+  'nav-dash': 'view-dash',
+  'nav-kk': 'view-kk',
+  'nav-memo': 'view-memo',
+  'nav-ajk': 'view-ajk',
+  'nav-penceramah': 'view-penceramah',
+  'nav-sijil': 'view-sijil',
+  'nav-laporan': 'view-laporan',
+  'nav-penilaian': 'view-penilaian',
+  'nav-analisis': 'view-analisis',
+};
+
+/* Map view → jenis rekod untuk renderModCharts */
+const VIEW_JENIS = {
+  'view-kk':        'KertasKerja',
+  'view-memo':      'Memo',
+  'view-ajk':       'SuratAJK',
+  'view-penceramah':'SuratPenceramah',
+  'view-sijil':     'Sijil',
+  'view-laporan':   'Laporan',
+  'view-penilaian': 'Penilaian',
+};
+
+function switchView(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+  const view = document.getElementById(viewId);
+  if (view) view.classList.add('active');
+  const navBtn = Object.keys(VIEWS).find(k => VIEWS[k] === viewId);
+  if (navBtn) document.getElementById(navBtn)?.classList.add('active');
+  // hide/show sticky footer (only for kertas kerja)
+  document.querySelector('.sticky-footer').style.display = viewId === 'view-kk' ? '' : 'none';
+  // Render carta modul berkenaan
+  if (VIEW_JENIS[viewId]) renderModCharts(VIEW_JENIS[viewId]);
+  window.scrollTo(0, 0);
+}
+
+Object.entries(VIEWS).forEach(([navId, viewId]) => {
+  const btn = document.getElementById(navId);
+  if (btn) btn.addEventListener('click', () => switchView(viewId));
+});
+
+document.getElementById('btn-new-kk')?.addEventListener('click', () => switchView('view-kk'));
+document.getElementById('btn-dash-import')?.addEventListener('click', () => document.getElementById('file-import').click());
+
+// Start on dashboard
+switchView('view-dash');
+
+/* ═══════════════════════════════════════════════════════════════════
+   STORAN STATISTIK — rakam setiap dokumen dijana ke localStorage
+   ═══════════════════════════════════════════════════════════════════ */
+const STAT_KEY = 'hepkkmg_stats';
+
+function loadStats() {
+  try { return JSON.parse(localStorage.getItem(STAT_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveStats(stats) {
+  localStorage.setItem(STAT_KEY, JSON.stringify(stats));
+}
+
+function recordDoc(jenis, meta) {
+  /* meta: { nama, kluster, peringkat, bulan (YYYY-MM), bil } */
+  const stats = loadStats();
+  stats.push({
+    jenis,
+    nama: meta.nama || '',
+    kluster: meta.kluster || '',
+    peringkat: meta.peringkat || '',
+    bulan: meta.bulan || new Date().toISOString().slice(0,7),
+    bil: meta.bil || 1,
+    ts: Date.now(),
+  });
+  saveStats(stats);
+  refreshDashStats();
+  renderModCharts(jenis);
+  if (document.getElementById('view-analisis').classList.contains('active')) {
+    renderAnalisis();
+  }
+}
+
+function refreshDashStats() {
+  const stats = loadStats();
+  const byJenis = {};
+  stats.forEach(s => { byJenis[s.jenis] = (byJenis[s.jenis]||0) + 1; });
+  renderDashCharts(stats, byJenis);
+}
+
+/* ── Utility ─────────────────────────────────── */
+function fmtDate(raw) {
+  if (!raw) return '';
+  try { return new Date(raw+'T12:00:00').toLocaleDateString('ms-MY',{day:'numeric',month:'long',year:'numeric'}); }
+  catch(e){ return raw; }
+}
+function getVal(id) { return (document.getElementById(id)?.value||'').trim(); }
+function alertMsg(msg) { alert(msg); }
+function reqCheck(ids) {
+  for (const id of ids) {
+    const el = document.getElementById(id);
+    if (el && el.required && !el.value.trim()) {
+      el.focus(); el.scrollIntoView({block:'center',behavior:'smooth'});
+      alertMsg('Sila lengkapkan medan: ' + (el.labels[0]?.textContent?.replace(' *','') || id));
+      return false;
+    }
+  }
+  return true;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MEMO
+   ═══════════════════════════════════════════════════════════════════ */
+document.getElementById('btn-memo-generate').addEventListener('click', () => {
+  if (!reqCheck(['memo-rujukan','memo-tarikh','memo-kepada','memo-drpd','memo-perkara','memo-isi'])) return;
+  try {
+    const d = {
+      rujukan: getVal('memo-rujukan'),
+      tarikh: fmtDate(getVal('memo-tarikh')),
+      kepada: getVal('memo-kepada'),
+      drpd: getVal('memo-drpd'),
+      perkara: getVal('memo-perkara'),
+      isi: getVal('memo-isi'),
+      nama_penandatangan: getVal('memo-nama-ttd'),
+      jawatan_penandatangan: getVal('memo-jawatan-ttd'),
+    };
+    download(KKMG.buildMemo(d), 'Memo_'+d.rujukan.replace(/[^a-z0-9]/gi,'_')+'.docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    recordDoc('Memo', { nama: d.perkara });
+  } catch(err) { alertMsg('Gagal jana memo: '+err.message); console.error(err); }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   SURAT LANTIKAN AJK
+   ═══════════════════════════════════════════════════════════════════ */
+document.getElementById('btn-ajk-generate').addEventListener('click', () => {
+  if (!reqCheck(['ajk-tarikh','ajk-noruj','ajk-nama-penerima','ajk-nama-prog','ajk-tarikh-prog','ajk-tempat-prog','ajk-jawatan-lantik','ajk-skop'])) return;
+  try {
+    const d = {
+      tarikh: fmtDate(getVal('ajk-tarikh')),
+      no_ruj: getVal('ajk-noruj'),
+      nama_penerima: getVal('ajk-nama-penerima'),
+      jawatan_penerima: getVal('ajk-jawatan-penerima'),
+      alamat_penerima: getVal('ajk-alamat-penerima'),
+      nama_program: getVal('ajk-nama-prog'),
+      tarikh_program: fmtDate(getVal('ajk-tarikh-prog')),
+      tempat_program: getVal('ajk-tempat-prog'),
+      jawatan_dilantik: getVal('ajk-jawatan-lantik'),
+      tempoh: getVal('ajk-tempoh'),
+      skop: getVal('ajk-skop'),
+      nama_penandatangan: getVal('ajk-nama-ttd'),
+      jawatan_penandatangan: getVal('ajk-jawatan-ttd'),
+    };
+    const safe = d.nama_penerima.replace(/[^a-z0-9\u00C0-\u024F\s]/gi,'').trim().replace(/\s+/g,'_').slice(0,40);
+    download(KKMG.buildSuratAJK(d), 'Surat_AJK_'+safe+'.docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    recordDoc('SuratAJK', { nama: d.nama_program });
+  } catch(err) { alertMsg('Gagal jana surat: '+err.message); console.error(err); }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   SURAT LANTIKAN PENCERAMAH
+   ═══════════════════════════════════════════════════════════════════ */
+document.getElementById('btn-penc-generate').addEventListener('click', () => {
+  if (!reqCheck(['penc-tarikh','penc-noruj','penc-nama','penc-nama-prog','penc-tarikh-prog','penc-masa-prog','penc-tempat-prog','penc-tajuk'])) return;
+  try {
+    const d = {
+      tarikh: fmtDate(getVal('penc-tarikh')),
+      no_ruj: getVal('penc-noruj'),
+      nama_penerima: getVal('penc-nama'),
+      jawatan_penerima: getVal('penc-jawatan'),
+      org_penerima: getVal('penc-org'),
+      alamat_penerima: getVal('penc-alamat'),
+      nama_program: getVal('penc-nama-prog'),
+      tarikh_program: fmtDate(getVal('penc-tarikh-prog')),
+      masa_program: getVal('penc-masa-prog'),
+      tempat_program: getVal('penc-tempat-prog'),
+      tajuk_ceramah: getVal('penc-tajuk'),
+      bayaran: getVal('penc-bayaran'),
+      nama_penandatangan: getVal('penc-nama-ttd'),
+      jawatan_penandatangan: getVal('penc-jawatan-ttd'),
+    };
+    const safe = d.nama_penerima.replace(/[^a-z0-9\u00C0-\u024F\s]/gi,'').trim().replace(/\s+/g,'_').slice(0,40);
+    download(KKMG.buildSuratPenceramah(d), 'Surat_Penceramah_'+safe+'.docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    recordDoc('SuratPenceramah', { nama: d.nama_program });
+  } catch(err) { alertMsg('Gagal jana surat: '+err.message); console.error(err); }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   SIJIL BERNOMBOR SIRI
+   ═══════════════════════════════════════════════════════════════════ */
+const tSijilPenerima = DynTable('sijil-penerima-wrap', 'sijil-penerima-add', [
+  { key: 'nama', label: 'Nama Penerima', placeholder: 'Nama penuh', required: true },
+  { key: 'jawatan', label: 'Jawatan / Penyertaan', placeholder: 'cth: AJK / Peserta', required: false },
+]);
+
+// Update sijil count on table change
+document.getElementById('sijil-penerima-wrap').addEventListener('click', () => {
+  const rows = tSijilPenerima.getRows().filter(r => r[0]);
+  const dc = document.getElementById('dash-sijil-count');
+  if (dc) dc.textContent = rows.length + ' orang';
+});
+document.getElementById('sijil-penerima-wrap').addEventListener('input', () => {
+  const rows = tSijilPenerima.getRows().filter(r => r[0]);
+  const dc = document.getElementById('dash-sijil-count');
+  if (dc) dc.textContent = rows.length + ' orang';
+});
+
+document.getElementById('btn-sijil-generate').addEventListener('click', () => {
+  if (!reqCheck(['sijil-nama-prog','sijil-tarikh-prog','sijil-tempat-prog','sijil-penandatangan','sijil-jawatan-ttd','sijil-prefiks'])) return;
+  const penerima = tSijilPenerima.getRows();
+  if (!penerima.length || !penerima[0][0]) { alertMsg('Sila masukkan sekurang-kurangnya seorang penerima sijil.'); return; }
+  try {
+    const prefiks = getVal('sijil-prefiks');
+    const tahun = getVal('sijil-tahun') || new Date().getFullYear();
+    const d = {
+      nama_program: getVal('sijil-nama-prog'),
+      tarikh_program: fmtDate(getVal('sijil-tarikh-prog')),
+      tempat_program: getVal('sijil-tempat-prog'),
+      penandatangan: getVal('sijil-penandatangan'),
+      jawatan_penandatangan: getVal('sijil-jawatan-ttd'),
+      penerima: penerima.map((r, i) => ({
+        nama: r[0],
+        jawatan_penyertaan: r[1] || '',
+        no_siri: prefiks + '/' + tahun + '/' + String(i + 1).padStart(3, '0'),
+      })),
+    };
+    const safe = d.nama_program.replace(/[^a-z0-9\u00C0-\u024F\s]/gi,'').trim().replace(/\s+/g,'_').slice(0,50);
+    download(KKMG.buildSijil(d), 'Sijil_'+safe+'.docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    recordDoc('Sijil', { nama: d.nama_program, bil: d.penerima.length });
+  } catch(err) { alertMsg('Gagal jana sijil: '+err.message); console.error(err); }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   LAPORAN PROGRAM
+   ═══════════════════════════════════════════════════════════════════ */
+const tLapBelanja = DynTable('lap-belanja-wrap', 'lap-belanja-add', [
+  { key: 'perkara', label: 'Perkara Perbelanjaan', placeholder: 'cth: Bahan bengkel', required: true },
+  { key: 'amaun',   label: 'Amaun (RM)', type: 'number', width: '130px', min: '0', step: '0.01', placeholder: '0.00', required: true },
+]);
+
+document.getElementById('lap-belanja-wrap').addEventListener('input', () => {
+  const wrap = document.getElementById('lap-belanja-wrap');
+  const totalEl = document.getElementById('lap-belanja-total');
+  let total = 0;
+  wrap.querySelectorAll('tbody tr').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    total = Math.round((total + (Number(inputs[1]?.value)||0)) * 100) / 100;
+  });
+  totalEl.innerHTML = 'Jumlah Perbelanjaan Sebenar: <strong>RM ' + total.toLocaleString('ms-MY',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</strong>';
+});
+
+document.getElementById('btn-lap-generate').addEventListener('click', () => {
+  if (!reqCheck(['lap-nama','lap-tarikh','lap-tempat','lap-latar','lap-objektif','lap-pelaksanaan','lap-pencapaian','lap-kesimpulan','lap-nama-penyedia','lap-tarikh-laporan'])) return;
+  try {
+    const belanja = tLapBelanja.getRows();
+    let jumlah = 0;
+    belanja.forEach(r => { jumlah = Math.round((jumlah + (Number(r[1])||0))*100)/100; });
+    const daftar = Number(getVal('lap-bil-daftar'))||0;
+    const hadir  = Number(getVal('lap-bil-hadir'))||0;
+    const d = {
+      nama_program: getVal('lap-nama'),
+      kluster: getVal('lap-kluster'),
+      peringkat: getVal('lap-peringkat'),
+      tarikh: fmtDate(getVal('lap-tarikh')),
+      tempat: getVal('lap-tempat'),
+      penganjur: getVal('lap-penganjur'),
+      bilangan_daftar: daftar || '',
+      bilangan_hadir: hadir || '',
+      peratus_hadir: daftar && hadir ? ((hadir/daftar)*100).toFixed(1) : '',
+      latar: getVal('lap-latar'),
+      objektif: getVal('lap-objektif'),
+      pelaksanaan: getVal('lap-pelaksanaan'),
+      pencapaian: getVal('lap-pencapaian'),
+      cabaran: getVal('lap-cabaran'),
+      cadangan: getVal('lap-cadangan'),
+      gambar_keterangan: getVal('lap-gambar'),
+      kesimpulan: getVal('lap-kesimpulan'),
+      perbelanjaan_sebenar: belanja,
+      jumlah_perbelanjaan: jumlah,
+      nama_penyedia: getVal('lap-nama-penyedia'),
+      jawatan_penyedia: getVal('lap-jawatan-penyedia'),
+      tarikh_laporan: fmtDate(getVal('lap-tarikh-laporan')),
+    };
+    const safe = d.nama_program.replace(/[^a-z0-9\u00C0-\u024F\s]/gi,'').trim().replace(/\s+/g,'_').slice(0,60);
+    download(KKMG.buildLaporan(d), 'Laporan_'+safe+'.docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    recordDoc('Laporan', { nama: d.nama_program, kluster: d.kluster, peringkat: d.peringkat, bulan: (getVal('lap-tarikh')||'').slice(0,7)||new Date().toISOString().slice(0,7) });
+  } catch(err) { alertMsg('Gagal jana laporan: '+err.message); console.error(err); }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   PENILAIAN KURSUS
+   ═══════════════════════════════════════════════════════════════════ */
+const PEN_SOALAN = [
+  { dim: 'Kandungan Program', soalan: [
+    'Program ini memenuhi objektif yang ditetapkan',
+    'Kandungan program relevan dengan keperluan saya',
+    'Bahan / modul yang digunakan mudah difahami',
+  ]},
+  { dim: 'Penyampaian', soalan: [
+    'Penceramah / fasilitator menyampaikan dengan jelas',
+    'Penceramah / fasilitator berpengetahuan dalam bidang ini',
+    'Kaedah penyampaian menarik dan interaktif',
+  ]},
+  { dim: 'Logistik & Pengurusan', soalan: [
+    'Tempat program selesa dan sesuai',
+    'Program bermula dan tamat tepat pada masa',
+    'Pihak penganjur mesra dan membantu',
+  ]},
+  { dim: 'Keseluruhan', soalan: [
+    'Saya berpuas hati dengan program ini secara keseluruhan',
+    'Saya akan mengesyorkan program ini kepada rakan-rakan',
+  ]},
+];
+
+// Build soalan form
+const penSoalanList = document.getElementById('pen-soalan-list');
+PEN_SOALAN.forEach((dim, di) => {
+  const h = document.createElement('p');
+  h.style.cssText = 'font-weight:700;font-size:13px;color:#1a4d6d;margin:14px 0 8px';
+  h.textContent = dim.dim;
+  penSoalanList.appendChild(h);
+  dim.soalan.forEach((soalan, si) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap';
+    row.innerHTML = `<span style="flex:1;font-size:13px;min-width:200px">${soalan}</span>`
+      + [1,2,3,4,5].map(v =>
+        `<label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer">
+           <input type="radio" name="pen_${di}_${si}" value="${v}" style="width:auto;margin:0"> ${v}
+         </label>`
+      ).join('');
+    penSoalanList.appendChild(row);
+  });
+});
+
+// Accumulated responses storage
+let penResponses = []; // each: array of numbers, length = total questions
+
+document.getElementById('btn-pen-tambah').addEventListener('click', () => {
+  if (!getVal('pen-nama') || !getVal('pen-tarikh')) {
+    alertMsg('Sila isi Nama Program dan Tarikh terlebih dahulu.');
+    return;
+  }
+  // Collect current ratings
+  const vals = [];
+  let allAnswered = true;
+  PEN_SOALAN.forEach((dim, di) => {
+    dim.soalan.forEach((_, si) => {
+      const checked = document.querySelector(`input[name="pen_${di}_${si}"]:checked`);
+      if (checked) { vals.push(Number(checked.value)); }
+      else { allAnswered = false; }
+    });
+  });
+  if (!allAnswered) { alertMsg('Sila jawab semua soalan sebelum tambah respons.'); return; }
+  penResponses.push(vals);
+  const dc = document.getElementById('dash-pen-count');
+  if (dc) dc.textContent = penResponses.length + ' respons';
+
+  // Reset radios
+  PEN_SOALAN.forEach((dim, di) => {
+    dim.soalan.forEach((_, si) => {
+      document.querySelectorAll(`input[name="pen_${di}_${si}"]`).forEach(r => r.checked = false);
+    });
+  });
+  document.getElementById('pen-ulasan').value = '';
+
+  renderPenKeputusan();
+  document.getElementById('pen-keputusan-card').style.display = '';
+  document.getElementById('btn-pen-generate').style.display = '';
+  alertMsg('Respons ditambah. Jumlah respons: ' + penResponses.length);
+});
+
+function renderPenKeputusan() {
+  const wrap = document.getElementById('pen-keputusan-wrap');
+  if (!penResponses.length) { wrap.innerHTML = ''; return; }
+  const allQ = PEN_SOALAN.flatMap(d => d.soalan);
+  const n = penResponses.length;
+  let html = `<p style="font-size:13px;color:#607286;margin-bottom:12px">Jumlah respons: <strong>${n}</strong></p>`;
+  html += '<table style="width:100%;border-collapse:collapse;font-size:13px">';
+  html += '<tr style="background:#edf3f8"><th style="text-align:left;padding:8px 10px;border:1px solid #d0dce8">Soalan</th><th style="padding:8px 10px;border:1px solid #d0dce8;width:80px;text-align:center">Purata</th></tr>';
+  allQ.forEach((q, qi) => {
+    const vals = penResponses.map(r => r[qi]);
+    const avg = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
+    const bar = Math.round(Number(avg)/5*100);
+    html += `<tr><td style="padding:8px 10px;border:1px solid #dce5ed">${q}<div style="height:5px;background:#e0eaf4;border-radius:3px;margin-top:4px"><div style="height:5px;background:#1a4d6d;border-radius:3px;width:${bar}%"></div></div></td><td style="padding:8px 10px;border:1px solid #dce5ed;text-align:center;font-weight:700;color:#1a4d6d">${avg}</td></tr>`;
+  });
+  html += '</table>';
+  wrap.innerHTML = html;
+}
+
+document.getElementById('btn-pen-generate').addEventListener('click', () => {
+  if (!penResponses.length) { alertMsg('Tiada respons untuk dijana.'); return; }
+  if (!getVal('pen-nama') || !getVal('pen-tarikh')) { alertMsg('Sila isi maklumat program.'); return; }
+  try {
+    const allQ = PEN_SOALAN.flatMap(d => d.soalan);
+    const n = penResponses.length;
+    const soalanData = allQ.map((q, qi) => {
+      const vals = penResponses.map(r => r[qi]);
+      return {
+        soalan: q,
+        purata: (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2),
+        min: Math.min(...vals),
+        maks: Math.max(...vals),
+      };
+    });
+    const ulasanRaw = (document.getElementById('pen-ulasan').value||'');
+    const ulasan = ulasanRaw.split('\n').map(s=>s.trim()).filter(Boolean);
+    const d = {
+      nama_program: getVal('pen-nama'),
+      tarikh: fmtDate(getVal('pen-tarikh')),
+      soalan: soalanData,
+      ulasan,
+      respons: n,
+    };
+    const safe = d.nama_program.replace(/[^a-z0-9\u00C0-\u024F\s]/gi,'').trim().replace(/\s+/g,'_').slice(0,50);
+    download(KKMG.buildRingkasanPenilaian(d), 'Penilaian_'+safe+'.docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    recordDoc('Penilaian', { nama: d.nama_program, bulan: (getVal('pen-tarikh')||'').slice(0,7)||new Date().toISOString().slice(0,7), bil: n });
+  } catch(err) { alertMsg('Gagal jana ringkasan: '+err.message); console.error(err); }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   CARTA DASHBOARD — SVG inline, tiada CDN
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Helper: bina carta bar SVG */
+function svgBar(data, opts) {
+  /* data: [{label, val, color?}] */
+  const W = opts.width || 520, H = opts.height || 180;
+  const pad = {t:20,r:20,b:50,l:50};
+  const cW = W - pad.l - pad.r;
+  const cH = H - pad.t - pad.b;
+  const maxVal = Math.max(...data.map(d=>d.val), 1);
+  const barW = Math.max(8, Math.floor(cW / data.length) - 6);
+  const gap = (cW - barW * data.length) / (data.length + 1);
+  const COLORS = ['#1a4d6d','#2e7db5','#3fa0d8','#6cbce3','#a0d4f0','#c3e8fb'];
+
+  let bars = '', labels = '', vals = '';
+  data.forEach((d, i) => {
+    const x = pad.l + gap + i * (barW + gap);
+    const bH = Math.max(2, Math.round((d.val / maxVal) * cH));
+    const y = pad.t + cH - bH;
+    const col = d.color || COLORS[i % COLORS.length];
+    bars += `<rect x="${x}" y="${y}" width="${barW}" height="${bH}" fill="${col}" rx="2"/>`;
+    vals += `<text x="${x + barW/2}" y="${y - 4}" text-anchor="middle" font-size="10" fill="#1a4d6d" font-weight="600">${d.val||''}</text>`;
+    // rotate label
+    const lx = x + barW/2, ly = pad.t + cH + 10;
+    const short = d.label.length > 10 ? d.label.slice(0,9)+'…' : d.label;
+    labels += `<text x="${lx}" y="${ly}" text-anchor="end" font-size="9" fill="#607286" transform="rotate(-35,${lx},${ly})">${short}</text>`;
+  });
+
+  // y-axis ticks
+  let ticks = '';
+  [0,0.25,0.5,0.75,1].forEach(f => {
+    const ty = pad.t + cH - Math.round(f * cH);
+    const tv = Math.round(f * maxVal);
+    ticks += `<line x1="${pad.l}" y1="${ty}" x2="${pad.l + cW}" y2="${ty}" stroke="#e5e7eb" stroke-width="1"/>`;
+    ticks += `<text x="${pad.l - 6}" y="${ty + 4}" text-anchor="end" font-size="9" fill="#607286">${tv}</text>`;
+  });
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
+    ${ticks}${bars}${vals}${labels}
+    <line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+cH}" stroke="#d0dce8" stroke-width="1.5"/>
+    <line x1="${pad.l}" y1="${pad.t+cH}" x2="${pad.l+cW}" y2="${pad.t+cH}" stroke="#d0dce8" stroke-width="1.5"/>
+  </svg>`;
+}
+
+/* Helper: carta donut */
+function svgDonut(data, opts) {
+  const R = 60, r = 36, cx = 80, cy = 75;
+  const W = opts.width || 280, H = opts.height || 150;
+  const total = data.reduce((a,b)=>a+b.val,0) || 1;
+  const COLORS = ['#1a4d6d','#2e7db5','#3fa0d8','#6cbce3','#a0d4f0','#f5a623','#e87d3e'];
+  let slices = '', legends = '', start = -Math.PI/2;
+
+  data.forEach((d, i) => {
+    const angle = (d.val / total) * 2 * Math.PI;
+    const x1 = cx + R * Math.cos(start);
+    const y1 = cy + R * Math.sin(start);
+    const x2 = cx + R * Math.cos(start + angle);
+    const y2 = cy + R * Math.sin(start + angle);
+    const large = angle > Math.PI ? 1 : 0;
+    const xi1 = cx + r * Math.cos(start);
+    const yi1 = cy + r * Math.sin(start);
+    const xi2 = cx + r * Math.cos(start + angle);
+    const yi2 = cy + r * Math.sin(start + angle);
+    const col = COLORS[i % COLORS.length];
+    slices += `<path d="M${x1.toFixed(1)},${y1.toFixed(1)} A${R},${R} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} L${xi2.toFixed(1)},${yi2.toFixed(1)} A${r},${r} 0 ${large},0 ${xi1.toFixed(1)},${yi1.toFixed(1)} Z" fill="${col}"/>`;
+    const ly = 20 + i * 16;
+    legends += `<rect x="${cx*2+10}" y="${ly-8}" width="10" height="10" fill="${col}" rx="2"/>`;
+    const short = d.label.length > 14 ? d.label.slice(0,13)+'…' : d.label;
+    legends += `<text x="${cx*2+24}" y="${ly}" font-size="10" fill="#1f2328">${short} (${d.val})</text>`;
+    start += angle;
+  });
+  // centre text
+  const centreText = `<text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#1a4d6d">${total}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="9" fill="#607286">jumlah</text>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${slices}${centreText}${legends}</svg>`;
+}
+
+/* Helper: bulan label dari YYYY-MM */
+function bulanLabel(m) {
+  const [y, mo] = m.split('-');
+  return ['','Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'][parseInt(mo)] + "'" + y.slice(2);
+}
+
+/* Helper: groupByMonth untuk array rekod */
+function groupByMonth(recs) {
+  const byM = {};
+  recs.forEach(s => { byM[s.bulan] = (byM[s.bulan]||0) + 1; });
+  return Object.keys(byM).sort().slice(-8).map(m => ({ label: bulanLabel(m), val: byM[m] }));
+}
+
+/* Helper: groupByField */
+function groupByField(recs, field, limit) {
+  const byF = {};
+  recs.forEach(s => { if (s[field]) byF[s[field]] = (byF[s[field]]||0) + 1; });
+  return Object.entries(byF).sort((a,b)=>b[1]-a[1]).slice(0, limit||10).map(([k,v])=>({label:k,val:v}));
+}
+
+/* Helper: set carta atau teks tiada rekod */
+function setChart(id, data, opts) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = data.length
+    ? svgBar(data, opts||{width:340,height:160})
+    : '<p style="color:#9ba8b5;font-size:12px;padding:10px 0">Tiada rekod lagi.</p>';
+}
+
+function renderDashCharts(stats, byJenis) {
+  // Carta UAB HEP — bilangan keseluruhan setiap jenis
+  const el = document.getElementById('chart-dash-jenis');
+  if (!el) return;
+  const JENIS_LABEL = {
+    'KertasKerja':'Kertas Kerja','Memo':'Memo','SuratAJK':'Surat AJK',
+    'SuratPenceramah':'Srt. Penceramah','Sijil':'Sijil','Laporan':'Laporan',
+    'Penilaian':'Penilaian'
+  };
+  const data = Object.entries(byJenis).map(([k,v])=>({label:JENIS_LABEL[k]||k, val:v}));
+  el.innerHTML = data.length
+    ? svgBar(data,{width:620,height:200})
+    : '<p style="color:#9ba8b5;font-size:13px;padding:20px">Tiada rekod lagi. Jana mana-mana dokumen untuk melihat carta.</p>';
+}
+
+/* Render carta modul — dipanggil selepas jana dokumen & semasa switchView */
+function renderModCharts(jenis) {
+  const stats = loadStats();
+
+  if (!jenis || jenis === 'KertasKerja') {
+    const kk = stats.filter(s => s.jenis === 'KertasKerja');
+    setChart('chart-kk-bulan',    groupByMonth(kk),                   {width:260,height:150});
+    setChart('chart-kk-kluster',  groupByField(kk,'kluster',8),       {width:260,height:150});
+    setChart('chart-kk-peringkat',groupByField(kk,'peringkat',6),     {width:260,height:150});
+  }
+
+  if (!jenis || jenis === 'Memo') {
+    const memo = stats.filter(s => s.jenis === 'Memo');
+    setChart('chart-memo-bulan', groupByMonth(memo), {width:540,height:160});
+  }
+
+  if (!jenis || jenis === 'SuratAJK') {
+    const ajk = stats.filter(s => s.jenis === 'SuratAJK');
+    setChart('chart-ajk-bulan', groupByMonth(ajk), {width:540,height:160});
+  }
+
+  if (!jenis || jenis === 'SuratPenceramah') {
+    const penc = stats.filter(s => s.jenis === 'SuratPenceramah');
+    setChart('chart-penc-bulan', groupByMonth(penc), {width:540,height:160});
+  }
+
+  if (!jenis || jenis === 'Sijil') {
+    const sijil = stats.filter(s => s.jenis === 'Sijil');
+    // Mengikut program — nilai = bil penerima
+    const byProg = {};
+    sijil.forEach(s => { if (s.nama) byProg[s.nama] = (byProg[s.nama]||0) + (s.bil||1); });
+    const progData = Object.entries(byProg).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>({label:k,val:v}));
+    setChart('chart-sijil-program', progData, {width:340,height:160});
+    // Mengikut bulan — nilai = jumlah penerima
+    const byM = {};
+    sijil.forEach(s => { byM[s.bulan] = (byM[s.bulan]||0) + (s.bil||1); });
+    const mData = Object.keys(byM).sort().slice(-8).map(m => ({ label: bulanLabel(m), val: byM[m] }));
+    setChart('chart-sijil-bulan', mData, {width:340,height:160});
+  }
+
+  if (!jenis || jenis === 'Laporan') {
+    const lap = stats.filter(s => s.jenis === 'Laporan');
+    setChart('chart-lap-kluster', groupByField(lap,'kluster',8), {width:340,height:160});
+    setChart('chart-lap-bulan',   groupByMonth(lap),             {width:340,height:160});
+  }
+
+  if (!jenis || jenis === 'Penilaian') {
+    const pen = stats.filter(s => s.jenis === 'Penilaian');
+    // Kursus dinilai mengikut bulan (bilangan rekod = bilangan kursus)
+    setChart('chart-pen-kursus',  groupByMonth(pen), {width:340,height:160});
+    // Respons mengikut bulan — nilai = bil respons (simpan dalam meta.bil)
+    const byM = {};
+    pen.forEach(s => { byM[s.bulan] = (byM[s.bulan]||0) + (s.bil||1); });
+    const rData = Object.keys(byM).sort().slice(-8).map(m => ({ label: bulanLabel(m), val: byM[m] }));
+    setChart('chart-pen-respons', rData, {width:340,height:160});
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ANALISIS KEBERKESANAN — render
+   ═══════════════════════════════════════════════════════════════════ */
+function renderAnalisis() {
+  const stats = loadStats();
+  const total = stats.length;
+
+  document.getElementById('an-total').textContent = total;
+  document.getElementById('an-kk').textContent = stats.filter(s=>s.jenis==='KertasKerja').length;
+  document.getElementById('an-laporan').textContent = stats.filter(s=>s.jenis==='Laporan').length;
+  document.getElementById('an-sijil').textContent = stats.filter(s=>s.jenis==='Sijil').length;
+
+  // Carta kluster (KertasKerja sahaja)
+  const byKluster = {};
+  stats.filter(s=>s.jenis==='KertasKerja' && s.kluster).forEach(s => {
+    byKluster[s.kluster] = (byKluster[s.kluster]||0) + 1;
+  });
+  const klData = Object.entries(byKluster).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>({label:k,val:v}));
+  document.getElementById('chart-an-kluster').innerHTML = klData.length
+    ? svgBar(klData,{width:560,height:200})
+    : '<p style="color:#9ba8b5;font-size:13px;padding:20px 0">Tiada rekod Kertas Kerja lagi. Jana Kertas Kerja untuk melihat carta kluster.</p>';
+
+  // Carta peringkat
+  const byPeringkat = {};
+  stats.filter(s=>s.jenis==='KertasKerja' && s.peringkat).forEach(s => {
+    byPeringkat[s.peringkat] = (byPeringkat[s.peringkat]||0) + 1;
+  });
+  const prData = Object.entries(byPeringkat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({label:k,val:v}));
+  document.getElementById('chart-an-peringkat').innerHTML = prData.length
+    ? svgBar(prData,{width:400,height:180})
+    : '<p style="color:#9ba8b5;font-size:13px;padding:20px 0">Tiada rekod peringkat lagi.</p>';
+
+  // Carta semua jenis bulanan (line-style bar)
+  const byMonth = {};
+  stats.forEach(s => { byMonth[s.bulan] = (byMonth[s.bulan]||0) + 1; });
+  const months = Object.keys(byMonth).sort().slice(-12);
+  const mData = months.map(m => {
+    const [y,mo] = m.split('-');
+    const label = ['','Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'][parseInt(mo)] + "'" + y.slice(2);
+    return {label, val: byMonth[m]};
+  });
+  document.getElementById('chart-an-bulanan').innerHTML = mData.length
+    ? svgBar(mData,{width:560,height:180})
+    : '<p style="color:#9ba8b5;font-size:13px;padding:20px 0">Tiada rekod lagi.</p>';
+
+  // Jadual terakhir 20 rekod
+  const recent = [...stats].sort((a,b)=>b.ts-a.ts).slice(0,20);
+  const JLABEL = {KertasKerja:'Kertas Kerja',Memo:'Memo',SuratAJK:'Surat AJK',SuratPenceramah:'Surat Penceramah',Sijil:'Sijil',Laporan:'Laporan',Penilaian:'Penilaian'};
+  let html = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="background:#edf3f8">
+      <th style="text-align:left;padding:8px 10px;border:1px solid #d0dce8">Jenis Dokumen</th>
+      <th style="text-align:left;padding:8px 10px;border:1px solid #d0dce8">Nama Program</th>
+      <th style="text-align:left;padding:8px 10px;border:1px solid #d0dce8">Kluster</th>
+      <th style="text-align:left;padding:8px 10px;border:1px solid #d0dce8">Bulan</th>
+      <th style="text-align:left;padding:8px 10px;border:1px solid #d0dce8">Tarikh Jana</th>
+    </tr></thead><tbody>`;
+  recent.forEach(s => {
+    const d = new Date(s.ts);
+    const tStr = d.toLocaleDateString('ms-MY',{day:'numeric',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('ms-MY',{hour:'2-digit',minute:'2-digit'});
+    html += `<tr><td style="padding:7px 10px;border:1px solid #dce5ed">${JLABEL[s.jenis]||s.jenis}</td><td style="padding:7px 10px;border:1px solid #dce5ed">${s.nama||'—'}</td><td style="padding:7px 10px;border:1px solid #dce5ed">${s.kluster||'—'}</td><td style="padding:7px 10px;border:1px solid #dce5ed">${s.bulan||'—'}</td><td style="padding:7px 10px;border:1px solid #dce5ed;color:#607286;font-size:12px">${tStr}</td></tr>`;
+  });
+  if (!recent.length) html += `<tr><td colspan="5" style="padding:20px;text-align:center;color:#9ba8b5">Tiada rekod dijana lagi. Jana mana-mana dokumen untuk melihat rekod di sini.</td></tr>`;
+  html += '</tbody></table>';
+  document.getElementById('an-log').innerHTML = html;
+}
+
+document.getElementById('nav-analisis')?.addEventListener('click', () => {
+  switchView('view-analisis');
+  renderAnalisis();
+});
+
+document.getElementById('btn-an-clear')?.addEventListener('click', () => {
+  if (confirm('Padam SEMUA rekod statistik? Tindakan ini tidak boleh diundur.')) {
+    localStorage.removeItem(STAT_KEY);
+    renderAnalisis();
+    refreshDashStats();
+    alertMsg('Rekod statistik telah dipadamkan.');
+  }
+});
+
+// Init stats on load — render semua carta
+refreshDashStats();
+renderModCharts(null);
+
+</script>
+</body>
+</html>
